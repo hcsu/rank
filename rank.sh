@@ -30,9 +30,15 @@ rank() {
   # sed clause: remove the string `_ `, then the selected item will be mixed with previous itmes (all rows are not beginning with `_ `)
   SORT_DISPLAY_OPTION=$(sed 's/^_ //' "$RANK_FILE" | sort | uniq -c | sort -nr | awk  -F' ' '{print $NF}' | fzf --no-sort --exact --height "50%")
 
-  # save option to rank file
-  echo "$SORT_DISPLAY_OPTION" >> "$RANK_FILE"
-
-  # print -z "$EXECUTE $SORT_DISPLAY_OPTION"
-  printf "%s" "$SORT_DISPLAY_OPTION"
+  # exit if SORT_DISPLAY_OPTION is null
+  # this will avoid insert a empty line into rank file
+  if [ -z "$SORT_DISPLAY_OPTION" ]
+  then
+    return
+  else
+    # save option to rank file
+    echo "$SORT_DISPLAY_OPTION" >> "$RANK_FILE"
+    # print -z "$EXECUTE $SORT_DISPLAY_OPTION"
+    printf "%s" "$SORT_DISPLAY_OPTION"
+  fi
 }
